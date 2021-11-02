@@ -1,9 +1,31 @@
 <?php
   session_start();
+  require_once './functions.php';
 
   $name = $_SESSION['name'];
-  $hobby = $_SESSION['email'];
+  $email = $_SESSION['email'];
   $gender = $_SESSION['gender'];
+  $dbh = db_conn();
+  
+  try{ 
+      $sql = "INSERT INTO user (email, name, gender) VALUE (:email, :name, :gender)"; 
+      
+      $stmt = $dbh->prepare('SELECT * FROM user WHERE email = :email AND :name = :name AND gender= :gender'); 
+      
+      $stmt->bindValue(':email', $email, PDO::PARAM_STR); 
+      $stmt->bindValue(':name',$name,PDO::PARAM_STR); 
+      $stmt->bindValue(':gender',$gender,PDO::PARAM_INT); 
+      
+      $stmt->execute(); 
+      
+      $dbh = null; 
+      
+  }catch (PDOException $e){ 
+
+    echo($e->getMessage()); 
+    die(); 
+      
+  }
 ?>
 
 <!DOCTYPE html>
