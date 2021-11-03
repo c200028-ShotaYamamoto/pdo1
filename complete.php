@@ -1,16 +1,18 @@
 <?php
   session_start();
+  
   require_once './functions.php';
 
   $name = $_SESSION['name'];
   $email = $_SESSION['email'];
   $gender = $_SESSION['gender'];
+  
   $dbh = db_conn();
   
   try{ 
       $sql = "INSERT INTO user (email, name, gender) VALUE (:email, :name, :gender)"; 
       
-      $stmt = $dbh->prepare('SELECT * FROM user WHERE email = :email AND :name = :name AND gender= :gender'); 
+      $stmt = $dbh->prepare($sql); 
       
       $stmt->bindValue(':email', $email, PDO::PARAM_STR); 
       $stmt->bindValue(':name',$name,PDO::PARAM_STR); 
@@ -46,7 +48,7 @@
 </div>
 <hr>
 <p>名前は <?php echo $name;?> さん</p>
-<p>メールアドレスは <?php echo $hobby;?> </p>
+<p>メールアドレスは <?php echo $email;?> </p>
 
 <p>性別は <?php if( $gender === "1" ){ echo '男性'; }
 		elseif( $gender === "2" ){ echo '女性'; }
